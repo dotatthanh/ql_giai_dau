@@ -44,13 +44,13 @@
                                             </button>
                                         </div>
 
-                                        {{-- @can('Thêm giải đấu') --}}
+                                        @can('Thêm giải đấu')
                                         <div class="col-sm-7">
                                             <div class="text-sm-right">
                                                 <a href="{{ route('tournaments.create') }}" class="text-white btn btn-success btn-rounded waves-effect waves-light mb-2 mr-2"><i class="mdi mdi-plus mr-1"></i> Thêm giải đấu</a>
                                             </div>
-                                        </div><!-- end col-->
-                                        {{-- @endcan --}}
+                                        </div>
+                                        @endcan
                                     </div>
                                 </form>
 
@@ -123,19 +123,20 @@
                                                     
                                                     <td class="text-center">
                                                         <ul class="list-inline font-size-20 contact-links mb-0">
-                                                            {{-- @can('Chỉnh sửa giải đấu') --}}
+                                                            @can('Chỉnh sửa giải đấu')
                                                             <li class="list-inline-item px">
                                                                 <a href="{{ route('tournaments.edit', $item->id) }}" data-toggle="tooltip" data-placement="top" title="Sửa"><i class="mdi mdi-pencil text-success"></i></a>
                                                             </li>
-                                                            {{-- @endcan --}}
+                                                            @endcan
 
-
+                                                            @can('Chia bảng giải đấu')
                                                             <li class="list-inline-item px">
                                                                 <a href="{{ route('tournaments.draw', $item) }}" data-toggle="tooltip" data-placement="top" title="Chia bảng"><i class="bx bx-calendar text-success"></i></a>
                                                             </li>
+                                                            @endcan
 
-                                                            {{-- @can('Xóa giải đấu') --}}
-                                                            <li class="list-inline-item px">
+                                                            @can('Xóa giải đấu')
+                                                           <li class="list-inline-item px">
                                                                 <form method="post" action="{{ route('tournaments.destroy', $item->id) }}">
                                                                     @csrf
                                                                     @method('DELETE')
@@ -143,7 +144,7 @@
                                                                     <button type="submit" data-toggle="tooltip" data-placement="top" title="Xóa" class="border-0 bg-white"><i class="mdi mdi-trash-can text-danger"></i></button>
                                                                 </form>
                                                             </li>
-                                                            {{-- @endcan --}}
+                                                            @endcan
                                                         </ul>
                                                     </td>
                                                 </tr>

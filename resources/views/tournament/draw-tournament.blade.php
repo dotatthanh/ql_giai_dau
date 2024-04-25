@@ -16,7 +16,7 @@
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="{{ route('rooms.index') }}" title="Quản lý giải đấu" data-toggle="tooltip" data-placement="top">Quản lý giải đấu</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ route('tournaments.index') }}" title="Quản lý giải đấu" data-toggle="tooltip" data-placement="top">Quản lý giải đấu</a></li>
                                     <li class="breadcrumb-item active">Chia bảng giải đấu {{ $tournament->name }}</li>
                                 </ol>
                             </div>

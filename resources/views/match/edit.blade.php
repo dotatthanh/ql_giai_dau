@@ -18,7 +18,7 @@
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="{{ route('universities.index') }}"
+                                    <li class="breadcrumb-item"><a href="{{ route('matchs.index') }}"
                                             title="Quản lý trận đấu" data-toggle="tooltip" data-placement="top">Quản lý trận
                                             đấu</a></li>
                                     <li class="breadcrumb-item active">Cập nhật trận đấu</li>
