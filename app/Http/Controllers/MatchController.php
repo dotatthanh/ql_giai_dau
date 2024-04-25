@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTournamentRequest;
-use App\Http\Requests\UpdateTournamentRequest;
+use App\Http\Requests\StoreFootballMatchRequest;
+use App\Http\Requests\UpdateFootballMatchRequest;
 use App\Models\GroupTeam;
 use App\Models\Group;
 use App\Models\Team;
+use App\Models\FootballMatch;
 use App\Models\Tournament;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -22,18 +23,18 @@ class MatchController extends Controller
      */
     public function index(Request $request)
     {
-        $tournaments = Tournament::paginate(10);
+        $matchs = FootballMatch::paginate(10);
 
         if ($request->search) {
-            $tournaments = Tournament::where('name', 'like', '%'.$request->search.'%')->paginate(10);
-            $tournaments->appends(['search' => $request->search]);
+            $matchs = FootballMatch::where('name', 'like', '%'.$request->search.'%')->paginate(10);
+            $matchs->appends(['search' => $request->search]);
         }
 
         $data = [
-            'tournaments' => $tournaments
+            'matchs' => $matchs
         ];
 
-        return view('tournament.index', $data);
+        return view('match.index', $data);
     }
 
     /**
@@ -43,7 +44,14 @@ class MatchController extends Controller
      */
     public function create()
     {
-        return view('tournament.create');
+        $tournaments = Tournament::all();
+        $teams = Team::all();
+        $data = [
+            'tournaments' => $tournaments,
+            'teams' => $teams
+        ];
+
+        return view('match.create', $data);
     }
 
     /**
@@ -52,47 +60,32 @@ class MatchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTournamentRequest $request)
+    public function store(StoreFootballMatchRequest $request)
     {
         try {
             DB::beginTransaction();
-            
-            $file_path = '';
-            if ($request->file('image')) {
-                $name = time().'_'.$request->image->getClientOriginalName();
-                $file_path = 'uploads/image/tournament/'.$name;
-                Storage::disk('public_uploads')->putFileAs('image/tournament', $request->image, $name);
-            }
 
-            $tournament = Tournament::create([
-                'name' => $request->name,
-                'description' => $request->description,
-                'image' => $file_path,
-                'group_number' => $request->group_number,
+            FootballMatch::create([
+                'tournament_id' => $request->tournament_id,
+                'team1_id' => $request->team1_id,
+                'team2_id' => $request->team2_id,
             ]);
 
-            for ($i = 1; $i <= $request->group_number; $i++) {
-                Group::create([
-                    'tournament_id' => $tournament->id,
-                    'name' => "Bảng đấu $i",
-                ]);
-            }
-
             DB::commit();
-            return redirect()->route('tournaments.index')->with('alert-success','Thêm giải đấu thành công!');
+            return redirect()->route('matchs.index')->with('alert-success','Thêm trận đấu thành công!');
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('alert-error','Thêm giải đấu thất bại!');
+            return redirect()->back()->with('alert-error','Thêm trận đấu thất bại!');
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Tournament  $tournament
+     * @param  \App\Models\FootballMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function show(Tournament $tournament)
+    public function show(FootballMatch $match)
     {
         //
     }
@@ -100,104 +93,95 @@ class MatchController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Tournament  $tournament
+     * @param  \App\Models\FootballMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function edit(Tournament $tournament)
+    public function edit(FootballMatch $match)
     {
+        $tournaments = Tournament::all();
+        $teams = Team::all();
         $data = [
-            'data_edit' => $tournament
+            'tournaments' => $tournaments,
+            'teams' => $teams,
+            'data_edit' => $match
         ];
 
-        return view('tournament.edit', $data);
+        return view('match.edit', $data);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Tournament  $tournament
+     * @param  \App\Models\FootballMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTournamentRequest $request, Tournament $tournament)
+    public function update(UpdateFootballMatchRequest $request, FootballMatch $match)
     {
         try {
             DB::beginTransaction();
-            $tournament->groups()->delete();
-
-            $data = [
-                'name' => $request->name,
+            $match->update([
+                'tournament_id' => $request->tournament_id,
+                'team1_id' => $request->team1_id,
+                'team2_id' => $request->team2_id,
+                'score_team1' => $request->score_team1,
+                'score_team2' => $request->score_team2,
                 'description' => $request->description,
-                'group_number' => $request->group_number,
-            ];
-            if ($request->file('image')) {
-                $name = time().'_'.$request->image->getClientOriginalName();
-                $data['image'] = 'uploads/image/product/'.$name;
-                Storage::disk('public_uploads')->putFileAs('image/product', $request->image, $name);
-            }
-
-            $tournament->update($data);
-
-            for ($i = 1; $i <= $request->group_number; $i++) {
-                Group::create([
-                    'tournament_id' => $tournament->id,
-                    'name' => "Bảng đấu $i",
-                ]);
-            }
+            ]);
             
             DB::commit();
-            return redirect()->route('tournaments.index')->with('alert-success','Sửa giải đấu thành công!');
+            return redirect()->route('matchs.index')->with('alert-success','Sửa trận đấu thành công!');
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('alert-error','Sửa giải đấu thất bại!');
+            return redirect()->back()->with('alert-error','Sửa trận đấu thất bại!');
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Tournament  $tournament
+     * @param  \App\Models\FootballMatch  $match
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tournament $tournament)
+    public function destroy(FootballMatch $match)
     {
         try {
             DB::beginTransaction();
 
             
-            $tournament->destroy($tournament->id);
+            $match->destroy($match->id);
             
             DB::commit();
-            return redirect()->route('tournaments.index')->with('alert-success','Xóa giải đấu thành công!');
+            return redirect()->route('matchs.index')->with('alert-success','Xóa trận đấu thành công!');
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('alert-error','Xóa giải đấu thất bại!');
+            return redirect()->back()->with('alert-error','Xóa trận đấu thất bại!');
         }
     }
 
-    public function draw(Tournament $tournament)
+    public function draw(FootballMatch $match)
     {
         $teams = Team::all();
         
         $data = [
-            'tournament' => $tournament,
+            'match' => $match,
             'teams' => $teams,
         ];
 
-        return view('tournament.draw-tournament', $data);
+        return view('match.draw-match', $data);
     }
 
-    public function drawGroup(Tournament $tournament, Group $group)
+    public function drawGroup(FootballMatch $match, Group $group)
     {
         $teams = Team::all();
         
         $data = [
-            'tournament' => $tournament,
+            'match' => $match,
             'teams' => $teams,
             'group' => $group,
         ];
 
-        return view('tournament.draw-group', $data);
+        return view('match.draw-group', $data);
     }
 
     public function updateDrawGroup(Request $request, Group $group)
@@ -214,10 +198,10 @@ class MatchController extends Controller
             }
             
             DB::commit();
-            return redirect()->route('tournaments.draw', $group->tournament)->with('alert-success','Sửa giải đấu thành công!');
+            return redirect()->route('matchs.draw', $group->match)->with('alert-success','Sửa trận đấu thành công!');
         } catch (Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('alert-error','Sửa giải đấu thất bại!');
+            return redirect()->back()->with('alert-error','Sửa trận đấu thất bại!');
         }
     }
 }

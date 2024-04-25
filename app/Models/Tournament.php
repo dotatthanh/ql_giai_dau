@@ -21,6 +21,11 @@ class Tournament extends Model
         return $this->hasMany(Group::class);
     }
 
+    public function matchs()
+    {
+        return $this->hasMany(FootballMatch::class);
+    }
+
     public function hobbys()
     {
         return $this->hasMany(HobbyRoom::class);
