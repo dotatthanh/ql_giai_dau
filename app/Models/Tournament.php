@@ -16,9 +16,9 @@ class Tournament extends Model
         'group_number'
     ];
 
-    public function utilities()
+    public function groups()
     {
-        return $this->hasMany(RoomUtiliti::class);
+        return $this->hasMany(Group::class);
     }
 
     public function hobbys()

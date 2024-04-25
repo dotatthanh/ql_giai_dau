@@ -7,6 +7,14 @@
             {!! $errors->first('name', '<span class="error">:message</span>') !!}
         </div>
     </div>
+
+    <div class="col-sm-6">
+        <div class="form-group">
+            <label for="logo">Logo @if ($routeType == 'create')<span class="text-danger">*</span>@endif</label>
+            <input id="logo" name="logo" type="file" class="form-control">
+            {!! $errors->first('logo', '<span class="error">:message</span>') !!}
+        </div>
+    </div>
 </div>
 
 <button type="submit" class="btn btn-primary mr-1 waves-effect waves-light">Lưu lại</button>

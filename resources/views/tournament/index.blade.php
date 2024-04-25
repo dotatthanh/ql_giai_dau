@@ -131,7 +131,7 @@
 
 
                                                             <li class="list-inline-item px">
-                                                                <a href="{{ route('tournaments.draw', $item) }}" data-toggle="tooltip" data-placement="top" title="Chia bảng"><i class="mdi mdi-pencil text-success"></i></a>
+                                                                <a href="{{ route('tournaments.draw', $item) }}" data-toggle="tooltip" data-placement="top" title="Chia bảng"><i class="bx bx-calendar text-success"></i></a>
                                                             </li>
 
                                                             {{-- @can('Xóa giải đấu') --}}

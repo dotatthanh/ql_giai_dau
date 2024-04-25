@@ -36,7 +36,7 @@
 
                                 <form method="POST" action="{{ route('teams.update', $data_edit->id) }}" enctype="multipart/form-data">
                                     @method('PUT')
-                                    @include('team._form')
+                                    @include('team._form', ['routeType' => 'update'])
                                     
                                 </form>
 

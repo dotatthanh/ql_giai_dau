@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\UpdateTeamRequest;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TeamController extends Controller
 {
@@ -52,8 +54,15 @@ class TeamController extends Controller
         try {
             DB::beginTransaction();
             
-            $create = Team::create([
+            $file_path = '';
+            if ($request->file('logo')) {
+                $name = time().'_'.$request->logo->getClientOriginalName();
+                $file_path = 'uploads/image/team/'.$name;
+                Storage::disk('public_uploads')->putFileAs('image/team', $request->logo, $name);
+            }
+            Team::create([
                 'name' => $request->name,
+                'logo' => $file_path,
             ]);
             
             DB::commit();
@@ -97,14 +106,21 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreTeamRequest $request, Team $team)
+    public function update(UpdateTeamRequest $request, Team $team)
     {
         try {
             DB::beginTransaction();
 
-            $team->update([
+            $data = [
                 'name' => $request->name,
-            ]);
+            ];
+            if ($request->file('logo')) {
+                $name = time().'_'.$request->logo->getClientOriginalName();
+                $data['image'] = 'uploads/image/product/'.$name;
+                Storage::disk('public_uploads')->putFileAs('image/product', $request->logo, $name);
+            }
+
+            $team->update($data);
             
             DB::commit();
             return redirect()->route('teams.index')->with('alert-success','Sửa đội bóng thành công!');

@@ -20,6 +20,7 @@ use App\Http\Controllers\UniversityController;
 
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\MatchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,8 +72,12 @@ Route::prefix('admin')->group(function () {
 	    return redirect()->route('login');
 	});
 	Route::middleware(['auth'])->group(function () {
+		Route::resource('matchs', MatchController::class);
 		Route::resource('tournaments', TournamentController::class);
 		Route::get('/tournament-draw/{tournament}', [TournamentController::class, 'draw'])->name('tournaments.draw');
+		Route::get('/tournament-draw/{tournament}/group/{group}', [TournamentController::class, 'drawGroup'])->name('tournaments.draw-group');
+
+		Route::post('/tournament-draw/{group}/update-draw-group', [TournamentController::class, 'updateDrawGroup'])->name('tournaments.update-draw-group');
 
 
 		Route::resource('teams', TeamController::class);

@@ -30,11 +30,29 @@
                     <div class="col-12">
                         
 
-                                <form class="outer-repeater custom-validation" method="POST" action="{{ route('tournaments.update', $tournament->id) }}" enctype="multipart/form-data">
-                                    @method('PUT')
+                                {{-- <form class="custom-validation" method="POST" action="{{ route('tournaments.update-draw', $tournament->id) }}" enctype="multipart/form-data">
                                     @include('tournament._form_draw', ['routeType' => 'update'])
-                                    
-                                </form>
+                                </form> --}}
+
+                        <div class="card">
+                            <div class="card-body">
+
+                                @csrf
+                                <h4 class="card-title">Thông tin các bảng đấu</h4>
+                                <p class="card-title-desc">Chọn bảng đấu để chia bảng</p>
+
+                                <div class="row">
+                                    @foreach ($tournament->groups as $group)
+                                        <div class="col-4">
+                                            <a href="{{ route('tournaments.draw-group', [
+                                                'tournament' => $tournament,
+                                                'group' => $group,
+                                            ]) }}">{{ $group->name }}</a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

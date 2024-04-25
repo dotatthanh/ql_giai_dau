@@ -60,6 +60,7 @@
                                             <tr>
                                                 <th style="width: 70px;" class="text-center">STT</th>
                                                 <th>Tên đội bóng</th>
+                                                <th>Logo</th>
                                                 <th class="text-center">Hành động</th>
                                             </tr>
                                         </thead>
@@ -70,6 +71,9 @@
                                                     <td class="text-center">{{ $stt++ }}</td>
                                                     <td>
                                                         {{ $item->name }}
+                                                    </td>
+                                                    <td style="max-width: 100px;">
+                                                        <img src="{{ asset($item->logo) }}" alt="" class="w-100">
                                                     </td>
                                                     <td class="text-center">
                                                         <ul class="list-inline font-size-20 contact-links mb-0">

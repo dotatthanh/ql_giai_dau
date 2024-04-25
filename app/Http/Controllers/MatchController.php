@@ -13,7 +13,7 @@ use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class TournamentController extends Controller
+class MatchController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -8,7 +8,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title">Quản lý</li>
 
-                <li>
+                {{-- <li>
                     <a href="{{ route('dashboard') }}" class=" waves-effect">
                         <i class="bx bx-home-circle"></i>
                         <span>Trang chủ</span>
@@ -76,7 +76,7 @@
                         <span>Khách hàng</span>
                     </a>
                 </li>
-                @endcan
+                @endcan --}}
 
                 <li>
                     <a href="{{ route('tournaments.index') }}" class=" waves-effect">
@@ -89,6 +89,13 @@
                     <a href="{{ route('teams.index') }}" class=" waves-effect">
                         <i class="bx bx-user-circle"></i>
                         <span>Đội bóng</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('matchs.index') }}" class=" waves-effect">
+                        <i class="bx bx-user-circle"></i>
+                        <span>Trận đấu</span>
                     </a>
                 </li>
 
